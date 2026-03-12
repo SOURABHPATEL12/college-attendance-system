@@ -12,7 +12,10 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Attendify">
         <activity
-            android:name=".admain.AdmainLoginPage"
+            android:name=".admain.AdminDashboardPage"
+            android:exported="false" />
+        <activity
+            android:name=".admain.AdminLoginPage"
             android:exported="false" />
         <activity
             android:name=".teacher.TeacherLoginPage"
