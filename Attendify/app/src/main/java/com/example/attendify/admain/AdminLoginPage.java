@@ -26,6 +26,9 @@ public class AdminLoginPage extends AppCompatActivity {
     Button loginBtn,sendOtpBtn;
     EditText adminEmail,otpField;
 
+    // store otp
+    String finalotp;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,11 +38,6 @@ public class AdminLoginPage extends AppCompatActivity {
         sendOtpBtn= findViewById(R.id.sendOtpBtn);
         adminEmail= findViewById(R.id.adminEmail);
         otpField= findViewById(R.id.otpField);
-
-
-        // Store otp
-
-
 
         // send otp
         sendOtpBtn.setOnClickListener(new View.OnClickListener() {
@@ -53,7 +51,7 @@ public class AdminLoginPage extends AppCompatActivity {
                        //http://192.168.1.3/adminapi1/send_otp.php
                        //192.168.1.3   change daily
                        Retrofit retrofit = new Retrofit.Builder()
-                               .baseUrl("http://192.168.1.3/adminapi1/")
+                               .baseUrl("http://192.168.1.6/adminapi1/")
                                .addConverterFactory(ScalarsConverterFactory.create())
                                .build();
 
@@ -70,6 +68,7 @@ public class AdminLoginPage extends AppCompatActivity {
                                    JSONObject jsonObject = new JSONObject(apiresponse);
                                    String otp = jsonObject.getString("otp");
 
+                                   finalotp=otp;
                                    Toast.makeText(AdminLoginPage.this,"otp is send to your gmail",Toast.LENGTH_LONG).show();
 
                                } catch (JSONException e) {
@@ -97,6 +96,24 @@ public class AdminLoginPage extends AppCompatActivity {
 
 
                         }
+            }
+        });
+
+
+        //login button and do opt match
+        loginBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                    String inputotp=otpField.getText().toString();
+                    if(inputotp.equals(finalotp)){
+                        Intent nextToAdmainDeshboard;
+                        nextToAdmainDeshboard = new Intent(AdminLoginPage.this, AdminDashboardPage.class);
+                        startActivity(nextToAdmainDeshboard);
+                        finish();
+                    }else{
+                        Toast.makeText(AdminLoginPage.this,"Wrong opt",Toast.LENGTH_LONG).show();
+                    }
+
             }
         });
 
