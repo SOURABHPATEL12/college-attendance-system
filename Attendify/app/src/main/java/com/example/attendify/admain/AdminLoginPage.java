@@ -50,9 +50,9 @@ public class AdminLoginPage extends AppCompatActivity {
                        
                        // api calling
                        //http://192.168.1.3/adminapi1/send_otp.php
-                       //192.168.1.3   change daily
+                       //192.168.1.10   change daily
                        Retrofit retrofit = new Retrofit.Builder()
-                               .baseUrl("http://192.168.1.6/adminapi1/")
+                               .baseUrl("http://192.168.1.10/adminapi1/")
                                .addConverterFactory(ScalarsConverterFactory.create())
                                .build();
 
@@ -108,6 +108,12 @@ public class AdminLoginPage extends AppCompatActivity {
             public void onClick(View v) {
                     String inputotp=otpField.getText().toString();
                     if(inputotp.equals(finalotp)){
+                        //sahredpreference
+                        SharedPreferences sp = getSharedPreferences("adminlogin",MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sp.edit();
+                        editor.putBoolean("Status",true);
+                        editor.apply();
+
                         Intent nextToAdmainDeshboard;
                         nextToAdmainDeshboard = new Intent(AdminLoginPage.this, AdminDashboardPage.class);
                         startActivity(nextToAdmainDeshboard);

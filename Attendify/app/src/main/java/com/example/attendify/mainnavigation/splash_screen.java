@@ -23,13 +23,25 @@ public class splash_screen extends AppCompatActivity {
         setContentView(R.layout.activity_splash_screen);
 
                 new Handler().postDelayed(new Runnable() {
+
+
+                    Intent  i ;
                     @Override
                     public void run() {
-                        Intent nextToMainNavigation;
-                        nextToMainNavigation = new Intent(splash_screen.this, MainActivity.class);
-                        startActivity(nextToMainNavigation);
-                        finish();
+                           SharedPreferences sp = getSharedPreferences("adminlogin",MODE_PRIVATE);
+                           Boolean islogin = sp.getBoolean("Status",false);
+                           if(islogin){
+                               i = new Intent(splash_screen.this, AdminDashboardPage.class);
+
+                           }else{
+
+                               i = new Intent(splash_screen.this, MainActivity.class);
+
+                           }
+                            startActivity(i);
+                            finish();
                     }
                 },2000);
+
     }
 }
