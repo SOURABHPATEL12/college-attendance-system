@@ -1,0 +1,63 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <!-- HOD Name -->
+    <EditText
+        android:id="@+id/hodName"
+        android:hint="Enter HOD Name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- Email -->
+    <EditText
+        android:id="@+id/hodGmail"
+        android:hint="Enter Gmail"
+        android:inputType="textEmailAddress"
+        android:layout_marginTop="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- Department Label -->
+    <TextView
+        android:text="Department"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- Department Spinner -->
+    <Spinner
+        android:id="@+id/sphodDepartment"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- Branch Label -->
+    <TextView
+        android:text="Branch"
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:layout_marginTop="15dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <!-- Branch Spinner -->
+    <Spinner
+        android:id="@+id/sphodBranch"
+        android:layout_marginTop="5dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+
+    <Button
+        android:id="@+id/dilaog_addhodbutton"
+        android:layout_marginTop="15dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="ADD HOD"/>
+
+</LinearLayout>
