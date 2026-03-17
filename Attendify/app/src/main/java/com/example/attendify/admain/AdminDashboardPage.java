@@ -23,6 +23,7 @@ import com.example.attendify.R;
 import com.example.attendify.mainnavigation.MainActivity;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -218,8 +219,49 @@ public class AdminDashboardPage extends AppCompatActivity {
 
 ///////////        /// //////////////////////////////////////////////////////////////////
         //  calling api to get all hod present in database
+//     http://localhost/adminapi1/get_hod.php
 
+        //1
+         Retrofit retrofit = new Retrofit.Builder()
+                 .baseUrl("http://localhost/adminapi1/")
+                 .addConverterFactory(ScalarsConverterFactory.create())
+                 .build();
 
+        //2  create interface
+
+        //3 connecting interfece
+        GetApiAllhodInterface api = retrofit.create(GetApiAllhodInterface.class);
+
+        //4
+        Call<String> call = api.gethod();
+
+        // 5
+        call.enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                String allhoddata = response.body().toString();
+
+                try {
+                    JSONObject jsonObject = new JSONObject(allhoddata);
+                    JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+                    for(int i = 0;i<jsonArray.length();i++) {
+                        JSONObject finaldata = jsonArray.getJSONObject(i);
+                        String name = finaldata.getString("name");
+                        String gmail = finaldata.getString("email");
+                        String department = finaldata.getString("department");
+                        String branch = finaldata.getString("branch");
+                    }
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+
+            }
+        });
 
 
 

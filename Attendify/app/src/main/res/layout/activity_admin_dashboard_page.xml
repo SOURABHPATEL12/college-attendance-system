@@ -15,6 +15,13 @@
         android:background="#6200EE"
         app:titleTextColor="@android:color/white" />
 
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="?attr/actionBarSize"/>
+
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/btnAddbyadmin"
         android:layout_width="wrap_content"
