@@ -49,10 +49,10 @@ public class AdminLoginPage extends AppCompatActivity {
                    if(inputgmail.equals(gmail)) {
                        
                        // api calling
-                       //http://192.168.1.3/adminapi1/send_otp.php
+                       //http:// 172.20.82.224/adminapi1/send_otp.php
                        //192.168.1.10   change daily
                        Retrofit retrofit = new Retrofit.Builder()
-                               .baseUrl("http://192.168.1.10/adminapi1/")
+                               .baseUrl("http://10.230.226.196/adminapi1/")
                                .addConverterFactory(ScalarsConverterFactory.create())
                                .build();
 

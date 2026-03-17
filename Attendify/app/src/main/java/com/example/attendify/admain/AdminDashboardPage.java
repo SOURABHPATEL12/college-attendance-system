@@ -7,11 +7,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,14 +21,28 @@ import androidx.appcompat.widget.Toolbar;
 
 import com.example.attendify.R;
 import com.example.attendify.mainnavigation.MainActivity;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.scalars.ScalarsConverterFactory;
 
 public class AdminDashboardPage extends AppCompatActivity {
 
     Toolbar AdmainToolBar;
-    Button btnAddbyadmin;
+    FloatingActionButton btnAddbyadmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +59,13 @@ public class AdminDashboardPage extends AppCompatActivity {
                 Dialog dialog = new Dialog(AdminDashboardPage.this);
                 dialog.setContentView(R.layout.dialog_add_hod);
                 dialog.setCancelable(true);  // on backpress diaog box close
+
+                // Set width & height
+                dialog.getWindow().setLayout(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.WRAP_CONTENT
+                );
+                dialog.show();
 
                 EditText hodName = dialog.findViewById(R.id.hodName);
                 EditText hodgmail = dialog.findViewById(R.id.hodGmail);
@@ -70,9 +93,9 @@ public class AdminDashboardPage extends AppCompatActivity {
                 branchMap.put("Commerce Department", new String[]{"B.Com","BBA"});
 
                 // onitem click update branch automaticaly
-                sphodDepartment.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                sphodDepartment.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                         String selectedDept = depertment[position];
                         String[] branches = branchMap.get(selectedDept);
 
@@ -80,7 +103,12 @@ public class AdminDashboardPage extends AppCompatActivity {
 
                         sphodBranch.setAdapter(branchAdapter);
                     }
-                });
+
+                    @Override
+                    public void onNothingSelected(AdapterView<?> parent) {
+
+                    }
+                } );
 
 
                 // add hod button work
@@ -89,6 +117,81 @@ public class AdminDashboardPage extends AppCompatActivity {
                     public void onClick(View v) {
                          // work left
 
+               //////////////////////////////         /// //////////////////////////////////////////////
+                            // api to Store data in database
+
+                        //1
+                        Retrofit retrofit = new Retrofit.Builder()
+                                .baseUrl("http://10.230.226.196/adminapi1/")
+                                .addConverterFactory(ScalarsConverterFactory.create())
+                                .build();
+
+                        // 2 create interface
+
+                        // 3 conecting interface
+                        HodAddDetailInterface apiserver = retrofit.create(HodAddDetailInterface.class);
+                           // 4
+                        String name =hodName.getText().toString().trim();
+                        String gmail = hodgmail.getText().toString().trim();
+                        String deperment = sphodDepartment.getSelectedItem().toString().trim();
+                        String branch = sphodBranch.getSelectedItem().toString().trim();
+
+                        //format to send data to api
+
+                        //{
+                        //  "name": "Dr Sharma",
+                        //  "email": "sharma@gmail.com",
+                        //  "department": "Engineering",
+                        //  "branch": "CSE"
+                        //}
+                      //5
+                        JSONObject jsonObject = new JSONObject();
+                        try {
+                            jsonObject.put("name",name);
+                            jsonObject.put("email",gmail);
+                            jsonObject.put("department",deperment);
+                            jsonObject.put("branch",branch);
+                        } catch (JSONException e) {
+                            throw new RuntimeException(e);
+                        }
+
+                        // 6
+                        String jsonString = jsonObject.toString();
+                        RequestBody body = RequestBody.create(jsonString, MediaType.parse("application/json"));
+
+                        //7
+                        Call<ResponseBody> call = apiserver.AddNewHod(body);
+
+                        //8 now below tha api respone
+                        call.enqueue(new Callback<ResponseBody>() {
+                            @Override
+                            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                                String apiResponsedata = null;
+                                try {
+                                    apiResponsedata = response.body().string();
+                                } catch (IOException e) {
+                                    throw new RuntimeException(e);
+                                }
+
+                                //{
+                                //    "status": "success",
+                                //    "message": "HOD added successfully"
+                                try {
+                                    JSONObject jsonObject1 = new JSONObject(apiResponsedata);
+                                    String message = jsonObject1.getString("message");
+                                    Toast.makeText(AdminDashboardPage.this,message,Toast.LENGTH_LONG).show();
+                                    dialog.dismiss();
+                                } catch (JSONException e) {
+                                    throw new RuntimeException(e);
+                                }
+                            }
+
+                            @Override
+                            public void onFailure(Call<ResponseBody> call, Throwable t) {
+
+                            }
+
+                        });
                     }
                 });
 
@@ -110,6 +213,15 @@ public class AdminDashboardPage extends AppCompatActivity {
         //2 operation
         getSupportActionBar().setTitle("Admin");
         getSupportActionBar().setSubtitle("Hii sourabh patel");
+
+
+
+///////////        /// //////////////////////////////////////////////////////////////////
+        //  calling api to get all hod present in database
+
+
+
+
 
 
         // crate resourse file by menu and add item
