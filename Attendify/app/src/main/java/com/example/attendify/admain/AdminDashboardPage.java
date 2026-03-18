@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,6 +19,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.attendify.R;
 import com.example.attendify.mainnavigation.MainActivity;
@@ -28,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -218,12 +222,25 @@ public class AdminDashboardPage extends AppCompatActivity {
 
 
 ///////////        /// //////////////////////////////////////////////////////////////////
+
+
+        RecyclerView Recyclerview ;
+        Recyclerview = findViewById(R.id.Recyclerview);
+
+        // imp
+        Recyclerview.setLayoutManager(new LinearLayoutManager(this));
+
+        //( now model class )
+
+        // arrylist
+        ArrayList<REcyclervierModelclass> arraylist = new ArrayList<>();
+
         //  calling api to get all hod present in database
 //     http://localhost/adminapi1/get_hod.php
 
         //1
          Retrofit retrofit = new Retrofit.Builder()
-                 .baseUrl("http://localhost/adminapi1/")
+                 .baseUrl("http://10.230.226.196/adminapi1/")
                  .addConverterFactory(ScalarsConverterFactory.create())
                  .build();
 
@@ -239,11 +256,15 @@ public class AdminDashboardPage extends AppCompatActivity {
         call.enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
-                String allhoddata = response.body().toString();
+                String allhoddata = response.body();
+
+                Log.e("api","apiresponce"+allhoddata);
 
                 try {
                     JSONObject jsonObject = new JSONObject(allhoddata);
                     JSONArray jsonArray = jsonObject.getJSONArray("data");
+
+                    arraylist.clear();
 
                     for(int i = 0;i<jsonArray.length();i++) {
                         JSONObject finaldata = jsonArray.getJSONObject(i);
@@ -251,7 +272,20 @@ public class AdminDashboardPage extends AppCompatActivity {
                         String gmail = finaldata.getString("email");
                         String department = finaldata.getString("department");
                         String branch = finaldata.getString("branch");
+
+
+                        Log.e("apidata","parsing data"+name+gmail+department+branch);
+
+                        // adding details in arraylist
+                        arraylist.add(new REcyclervierModelclass(R.drawable.hod_icon,name,gmail,department,branch));
+
                     }
+
+                    // adapter connect
+                    HodAdapter adapter = new HodAdapter(AdminDashboardPage.this, arraylist);
+                    Recyclerview.setAdapter(adapter);
+                    adapter.notifyDataSetChanged();
+
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
