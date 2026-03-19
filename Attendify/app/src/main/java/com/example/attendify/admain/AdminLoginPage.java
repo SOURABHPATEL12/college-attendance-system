@@ -52,7 +52,7 @@ public class AdminLoginPage extends AppCompatActivity {
                        //http:// 172.20.82.224/adminapi1/send_otp.php
                        //192.168.1.10   change daily
                        Retrofit retrofit = new Retrofit.Builder()
-                               .baseUrl("http://10.230.226.196/adminapi1/")
+                               .baseUrl("http://10.179.45.196/adminapi1/")
                                .addConverterFactory(ScalarsConverterFactory.create())
                                .build();
 

@@ -48,6 +48,9 @@ public class AdminDashboardPage extends AppCompatActivity {
 
     Toolbar AdmainToolBar;
     FloatingActionButton btnAddbyadmin;
+    HodAdapter adapter;
+    ArrayList<REcyclervierModelclass> arrayList;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,10 +69,7 @@ public class AdminDashboardPage extends AppCompatActivity {
                 dialog.setCancelable(true);  // on backpress diaog box close
 
                 // Set width & height
-                dialog.getWindow().setLayout(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.WRAP_CONTENT
-                );
+                dialog.getWindow().setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 dialog.show();
 
                 EditText hodName = dialog.findViewById(R.id.hodName);
@@ -127,7 +127,7 @@ public class AdminDashboardPage extends AppCompatActivity {
 
                         //1
                         Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl("http://10.230.226.196/adminapi1/")
+                                .baseUrl("http://10.179.45.196/adminapi1/")
                                 .addConverterFactory(ScalarsConverterFactory.create())
                                 .build();
 
@@ -184,8 +184,19 @@ public class AdminDashboardPage extends AppCompatActivity {
                                 try {
                                     JSONObject jsonObject1 = new JSONObject(apiResponsedata);
                                     String message = jsonObject1.getString("message");
+                                    JSONObject jsonObject2 = jsonObject1.getJSONObject("data");
+                                    String name1 = jsonObject2.getString("name");
+                                    String gmail1 = jsonObject2.getString("email");
+                                    String depertment1 = jsonObject2.getString("department");
+                                    String branch1 = jsonObject2.getString("branch");
+
                                     Toast.makeText(AdminDashboardPage.this,message,Toast.LENGTH_LONG).show();
+                                    // add to list
+                                    arrayList.add(new REcyclervierModelclass(R.drawable.hod_icon, name1, gmail1,depertment1, branch1));
+
+                                    adapter.notifyItemInserted(arrayList.size() - 1);
                                     dialog.dismiss();
+
                                 } catch (JSONException e) {
                                     throw new RuntimeException(e);
                                 }
@@ -196,8 +207,11 @@ public class AdminDashboardPage extends AppCompatActivity {
 
                             }
 
+
+
                         });
                     }
+
                 });
 
 
@@ -221,7 +235,7 @@ public class AdminDashboardPage extends AppCompatActivity {
 
 
 
-///////////        /// //////////////////////////////////////////////////////////////////
+            /// //////////////////////////////////////////////////////////////////
 
 
         RecyclerView Recyclerview ;
@@ -233,14 +247,14 @@ public class AdminDashboardPage extends AppCompatActivity {
         //( now model class )
 
         // arrylist
-        ArrayList<REcyclervierModelclass> arraylist = new ArrayList<>();
+        arrayList = new ArrayList<>();
 
         //  calling api to get all hod present in database
 //     http://localhost/adminapi1/get_hod.php
 
         //1
          Retrofit retrofit = new Retrofit.Builder()
-                 .baseUrl("http://10.230.226.196/adminapi1/")
+                 .baseUrl("http://10.179.45.196/adminapi1/")
                  .addConverterFactory(ScalarsConverterFactory.create())
                  .build();
 
@@ -264,7 +278,7 @@ public class AdminDashboardPage extends AppCompatActivity {
                     JSONObject jsonObject = new JSONObject(allhoddata);
                     JSONArray jsonArray = jsonObject.getJSONArray("data");
 
-                    arraylist.clear();
+                    arrayList.clear();
 
                     for(int i = 0;i<jsonArray.length();i++) {
                         JSONObject finaldata = jsonArray.getJSONObject(i);
@@ -277,14 +291,13 @@ public class AdminDashboardPage extends AppCompatActivity {
                         Log.e("apidata","parsing data"+name+gmail+department+branch);
 
                         // adding details in arraylist
-                        arraylist.add(new REcyclervierModelclass(R.drawable.hod_icon,name,gmail,department,branch));
+                        arrayList.add(new REcyclervierModelclass(R.drawable.hod_icon,name,gmail,department,branch));
 
                     }
 
-                    // adapter connect
-                    HodAdapter adapter = new HodAdapter(AdminDashboardPage.this, arraylist);
                     Recyclerview.setAdapter(adapter);
                     adapter.notifyDataSetChanged();
+
 
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
@@ -296,6 +309,52 @@ public class AdminDashboardPage extends AppCompatActivity {
 
             }
         });
+
+            ///////////////////////////////////////////////////////////////////////////////
+
+        // delet api
+
+         adapter = new HodAdapter(this, arrayList,position ->{
+            REcyclervierModelclass model = arrayList.get(position);
+              String gmail = model.getEmail();
+
+            try {
+                JSONObject obj = new JSONObject();
+                obj.put("email", gmail);
+
+                RequestBody body = RequestBody.create(obj.toString(), MediaType.parse("application/json"));
+
+                Retrofit retrofit2 = new Retrofit.Builder()
+                        .baseUrl("http://10.179.45.196/adminapi1/")
+                        .addConverterFactory(ScalarsConverterFactory.create())
+                        .build();
+
+              HodDeletInterface  api2 = retrofit.create(HodDeletInterface.class);
+
+                api2.deleteHod(body).enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+
+                        // remove from list
+                        arrayList.remove(position);
+
+                        // update recycler view
+                        adapter.notifyItemRemoved(position);
+                        adapter.notifyItemRangeChanged(position, arrayList.size());
+
+                        Toast.makeText(AdminDashboardPage.this, "Deleted", Toast.LENGTH_SHORT).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
+                        Toast.makeText(AdminDashboardPage.this, "Error", Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        } );
 
 
 

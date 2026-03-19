@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.attendify.R;
@@ -18,17 +19,19 @@ public class HodAdapter extends RecyclerView.Adapter<HodAdapter.ViewHolder> {
 
     Context context;
     ArrayList<REcyclervierModelclass> list;
+     static OnDeleteClick listener;
 
     // Constructor
-    public HodAdapter(Context context, ArrayList<REcyclervierModelclass> list) {
+    public HodAdapter(Context context, ArrayList<REcyclervierModelclass> list,OnDeleteClick listener) {
         this.context = context;
         this.list = list;
+        this.listener=listener;
     }
 
     // ================= VIEW HOLDER =================
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        ImageView imgProfile;
+        ImageView imgProfile,DeletMenu;
         TextView name, email, department, branch;
 
         public ViewHolder(@NonNull View itemView) {
@@ -39,6 +42,8 @@ public class HodAdapter extends RecyclerView.Adapter<HodAdapter.ViewHolder> {
             email = itemView.findViewById(R.id.RVEmail);
             department = itemView.findViewById(R.id.RvDepartment);
             branch = itemView.findViewById(R.id.RVBranch);
+            DeletMenu = itemView.findViewById(R.id.RVMenu);
+
         }
     }
 
@@ -62,6 +67,26 @@ public class HodAdapter extends RecyclerView.Adapter<HodAdapter.ViewHolder> {
         holder.email.setText(model.getEmail());
         holder.department.setText(model.getDepartment());
         holder.branch.setText(model.getBranch());
+        holder.DeletMenu.setOnClickListener(v -> {
+
+            PopupMenu popupMenu = new PopupMenu(context, holder.DeletMenu);
+            popupMenu.inflate(R.menu.rv_menu); // create this menu
+
+            popupMenu.setOnMenuItemClickListener(item -> {
+
+                if (item.getItemId() == R.id.delete_option) {
+
+                    // call delete listener
+                    listener.onDelete(position);
+
+                    return true;
+                }
+
+                return false;
+            });
+
+            popupMenu.show();
+        });
     }
 
     // ================= ITEM COUNT =================
