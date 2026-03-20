@@ -127,7 +127,7 @@ public class AdminDashboardPage extends AppCompatActivity {
 
                         //1
                         Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl("http://10.179.45.196/adminapi1/")
+                                .baseUrl("http://192.168.59.215/adminapi1/")
                                 .addConverterFactory(ScalarsConverterFactory.create())
                                 .build();
 
@@ -254,7 +254,7 @@ public class AdminDashboardPage extends AppCompatActivity {
 
         //1
          Retrofit retrofit = new Retrofit.Builder()
-                 .baseUrl("http://10.179.45.196/adminapi1/")
+                 .baseUrl("http://192.168.59.215/adminapi1/")
                  .addConverterFactory(ScalarsConverterFactory.create())
                  .build();
 
@@ -325,7 +325,7 @@ public class AdminDashboardPage extends AppCompatActivity {
                 RequestBody body = RequestBody.create(obj.toString(), MediaType.parse("application/json"));
 
                 Retrofit retrofit2 = new Retrofit.Builder()
-                        .baseUrl("http://10.179.45.196/adminapi1/")
+                        .baseUrl("http://192.168.59.215/adminapi1/")
                         .addConverterFactory(ScalarsConverterFactory.create())
                         .build();
 
