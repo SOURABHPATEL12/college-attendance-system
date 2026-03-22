@@ -12,6 +12,7 @@ import com.example.attendify.Hod.hodloginpage;
 import com.example.attendify.R;
 import com.example.attendify.admain.AdminDashboardPage;
 import com.example.attendify.admain.AdminLoginPage;
+import com.example.attendify.student.StudentLoginPage;
 import com.example.attendify.teacher.TeacherLoginPage;
 
 public class MainActivity extends AppCompatActivity {
@@ -34,6 +35,10 @@ public class MainActivity extends AppCompatActivity {
         btnStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent NextToStudentLogin;
+                NextToStudentLogin = new Intent(MainActivity.this, StudentLoginPage.class );
+                startActivity(NextToStudentLogin);
+                finish();
 
             }
         });
