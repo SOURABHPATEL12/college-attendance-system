@@ -35,10 +35,8 @@ public class MainActivity extends AppCompatActivity {
         btnStudent.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent NextToStudentLogin;
-                NextToStudentLogin = new Intent(MainActivity.this, StudentLoginPage.class );
-                startActivity(NextToStudentLogin);
-                finish();
+
+                
 
             }
         });
