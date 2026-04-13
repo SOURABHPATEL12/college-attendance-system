@@ -1,10 +1,82 @@
-<?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/main"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".student.StudentLoginPage">
+    android:background="@drawable/bg_gradient">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <!-- CENTER CARD -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_margin="20dp"
+        android:orientation="vertical"
+        android:padding="25dp"
+        android:background="@drawable/glass_bg"
+        android:elevation="10dp">
+
+        <!-- Title -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Attendify"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="5dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Student Login"
+            android:layout_gravity="center"
+            android:layout_marginBottom="25dp"/>
+
+        <!-- Roll No -->
+        <EditText
+            android:id="@+id/etRollNo"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Roll Number"
+            android:hintTextColor="#CCFFFFFF"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/glass_input"
+            android:padding="12dp"
+            android:layout_marginBottom="15dp"/>
+
+        <!-- Send OTP -->
+        <Button
+            android:id="@+id/btnSendOtp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Send OTP"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_gradient"/>
+
+        <!-- OTP -->
+        <EditText
+            android:id="@+id/etOtp"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Enter OTP"
+            android:hintTextColor="#CCFFFFFF"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/glass_input"
+            android:visibility="gone"
+            android:padding="12dp"
+            android:layout_marginTop="15dp"/>
+
+        <!-- Verify -->
+        <Button
+            android:id="@+id/btnVerify"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Verify and Login"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/btn_gradient"
+            android:visibility="gone"
+            android:layout_marginTop="10dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>
